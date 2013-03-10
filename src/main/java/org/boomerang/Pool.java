@@ -83,7 +83,13 @@ public interface Pool<T extends Poolable<T> > {
                 return this;
         }
 
-
+        /**
+         * will have no effect if the corresponding <code>T</code> type
+         * doesn't implements {@link Harvestable } interface
+         *
+         * @param harvestable
+         * @return
+         */
         public Builder<T> harvestable(boolean harvestable){
             this.harvestable = harvestable;
             return this;
@@ -414,7 +420,7 @@ public interface Pool<T extends Poolable<T> > {
             }
 
             T item=null;
-            if(getPoolSize() == this.maxSize && Harvestable.class.isAssignableFrom(itemType) ){
+            if(this.harvestable && getPoolSize() == this.maxSize && Harvestable.class.isAssignableFrom(itemType) ){
                    //max threshhold reached, so we try to reclaim harvestable item from borrowers if possible
                     synchronized (this){
                         LOG.info(" *************** Max size hit for  harvestable poolable type ***********************");
